@@ -46,16 +46,25 @@ namespace System
 
     public static class JsonExtensions
     {
-        private static readonly System.Text.Json.JsonSerializerOptions _jsonOptions = new System.Text.Json.JsonSerializerOptions
+        private static readonly System.Text.Json.JsonSerializerOptions _jsonOptions = 
+            new System.Text.Json.JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true,
+                IncludeFields = true
+            }
+        ;
+
+        public static T FromJson<T>(this string json)
         {
-            PropertyNameCaseInsensitive = true
-        };
+            return System.Text.Json.JsonSerializer.Deserialize<T>(json, _jsonOptions);
+        }
+            
 
-        public static T FromJson<T>(this string json) =>
-            System.Text.Json.JsonSerializer.Deserialize<T>(json, _jsonOptions);
-
-        public static string ToJson<T>(this T obj) =>
-            System.Text.Json.JsonSerializer.Serialize<T>(obj, _jsonOptions);
+        public static string ToJson<T>(this T obj)
+        {
+            return System.Text.Json.JsonSerializer.Serialize<T>(obj, _jsonOptions);
+        }
+            
     }
 
 
