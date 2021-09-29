@@ -38,7 +38,10 @@ namespace AmhMailServer
         {
             Write("220 localhost -- Fake proxy server");
             string strMessage = string.Empty;
-            while (true)
+
+            bool NOSTOP = true;
+
+            while (NOSTOP)
             {
                 try
                 {
@@ -81,7 +84,14 @@ namespace AmhMailServer
                         Write("250 OK");
                     }
                 }
+                else
+                {
+                    NOSTOP = false;
+                    this.m_client.Close();
+                }
             }
+
+            System.Console.WriteLine("exiting message loop");
         }
 
 

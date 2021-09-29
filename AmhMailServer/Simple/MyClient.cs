@@ -10,10 +10,35 @@ namespace AmhMailServer
 
         public static void Test(System.Net.Mail.MailMessage message)
         {
-            System.Net.Mail.SmtpClient smtp = new System.Net.Mail.SmtpClient("localhost");
-            smtp.Send(message);//Handles all messages in the protocol
-            smtp.Dispose();//sends a Quit message
+            using (System.Net.Mail.SmtpClient smtp = new System.Net.Mail.SmtpClient("localhost"))
+            { 
+                // smtp.EnableSsl = true;
+                // smtp.UseDefaultCredentials = false;
+                // smtp.Credentials = new System.Net.NetworkCredential("mais.sangue@hotmail.com", "M@is$angue");
+
+                smtp.Send(message);//Handles all messages in the protocol
+            } // Dispose() sends a Quit message 
         }
+
+
+        public static void Test()
+        {
+            System.Net.Mail.MailMessage msg = new System.Net.Mail.MailMessage();
+
+            msg.From = new System.Net.Mail.MailAddress("servicedesk@cor-management.ch");
+            msg.To.Add(new System.Net.Mail.MailAddress("steiger@cor-management.ch") );
+
+            msg.SubjectEncoding = System.Text.Encoding.UTF8;
+            msg.Subject = "Hello there";
+
+            msg.BodyEncoding = System.Text.Encoding.UTF8;
+            msg.Body = "This is a Test ! äöü ÄÖPÜ & %LOL.";
+            
+            Test(msg);
+        }
+
+
+        public static bool FOREVER = true;
 
 
         public static void StartServer()
@@ -24,7 +49,7 @@ namespace AmhMailServer
             System.Net.Sockets.TcpListener listener = new System.Net.Sockets.TcpListener(endPoint);
             listener.Start();
 
-            while (true)
+            while (FOREVER)
             {
                 System.Net.Sockets.TcpClient client = listener.AcceptTcpClient();
                 SMTPServer handler = new SMTPServer();
@@ -33,6 +58,7 @@ namespace AmhMailServer
                 System.Threading.Thread thread = new System.Threading.Thread(new System.Threading.ThreadStart(handler.Run));
                 thread.Start();
             }
+
         }
 
 

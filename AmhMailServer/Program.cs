@@ -69,18 +69,46 @@ namespace AmhMailServer
         // (await navigator.storage.estimate()).usage
         // (await navigator.storage.estimate()).quota/(1024*1024*1024)
 
+
+        public static bool ExecuteWithTimeLimit(System.TimeSpan timeSpan, System.Action codeBlock)
+        {
+            try
+            {
+                System.Threading.Tasks.Task task = System.Threading.Tasks.Task.Factory.StartNew(() => codeBlock());
+                if (!task.Wait(timeSpan))
+                {
+                    // ABORT HERE!
+                    System.Console.WriteLine("Time exceeded. Aborted!");
+                }
+                return task.IsCompleted;
+            }
+            catch (System.AggregateException ae)
+            {
+                throw ae.InnerExceptions[0];
+            }
+        }
+
+
         // https://love2dev.com/blog/what-is-the-service-worker-cache-storage-limit/
         // https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API
         // https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Offline_Service_workers
         // https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API/Using_Service_Workers
         // https://medium.com/@onejohi/offline-web-apps-using-local-storage-and-service-workers-5d40467117b9
         // https://www.sitepoint.com/offline-web-apps-service-workers-pouchdb/ 
-        static void Main(string[] args)
+        public static async System.Threading.Tasks.Task Main(string[] args)
         {
+            System.Threading.Thread thread = new System.Threading.Thread(new System.Threading.ThreadStart(MyClient.StartServer));
+            thread.Start();
+
+
+            await System.Threading.Tasks.Task.Delay(100);
+            MyClient.Test();
 
 
             System.Console.WriteLine(System.Environment.NewLine);
             System.Console.WriteLine(" --- Press any key to continue --- ");
+            System.Console.ReadKey();
+            MyClient.FOREVER = false;
         }
 
 
