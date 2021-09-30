@@ -256,7 +256,8 @@ namespace NetCoreServer // System.Runtime.CompilerServices
 
                 if (length == 0)
                 {
-                    return System.Array.Empty<T>();
+                    // return System.Array.Empty<T>();
+                    return Array2<T>.Empty();
                 }
 
                 var dest = new T[length];

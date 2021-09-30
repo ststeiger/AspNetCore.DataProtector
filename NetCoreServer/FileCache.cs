@@ -359,7 +359,7 @@ namespace NetCoreServer
                 // Iterate through all directory entries
                 foreach (var item in Directory.GetDirectories(path))
                 {
-                    string key = keyPrefix + HttpUtility.UrlDecode(Path.GetFileName(item));
+                    string key = keyPrefix + HttpUtility2.UrlDecode(Path.GetFileName(item));
 
                     // Recursively insert sub-directory
                     if (!InsertPathInternal(item, key, timeout, handler))
@@ -368,7 +368,7 @@ namespace NetCoreServer
 
                 foreach (var item in Directory.GetFiles(path))
                 {
-                    string key = keyPrefix + HttpUtility.UrlDecode(Path.GetFileName(item));
+                    string key = keyPrefix + HttpUtility2.UrlDecode(Path.GetFileName(item));
 
                     try
                     {

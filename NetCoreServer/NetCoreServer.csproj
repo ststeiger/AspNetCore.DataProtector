@@ -1,11 +1,28 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>net45;net451;net452;net46;net461;net462;net47;net472;net48;netstandard2.0;net5.0;</TargetFrameworks>
   </PropertyGroup>
-
+  
   <ItemGroup>
     <PackageReference Include="System.Memory" Version="4.5.4" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
-
+  
+  <PropertyGroup Condition="'$(TargetFramework)'=='net5.0'" >
+    <DefineConstants>HAVE_ShutdownAsync</DefineConstants>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(TargetFramework)'=='net48'" >
+    <DefineConstants>HAVE_ShutdownAsync</DefineConstants>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(TargetFramework)'=='net472'" >
+    <DefineConstants>HAVE_ShutdownAsync</DefineConstants>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(TargetFramework)'=='net47'" >
+    <DefineConstants>HAVE_ShutdownAsync</DefineConstants>
+  </PropertyGroup>
+  
 </Project>

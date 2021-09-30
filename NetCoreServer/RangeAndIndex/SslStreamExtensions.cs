@@ -35,8 +35,8 @@ namespace NetCoreServer
          );
 
 
-
-        internal static async System.Threading.Tasks.Task ShutdownAsync(this System.Net.Security.SslStream stream)
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        internal static async System.Threading.Tasks.Task ShutdownAsyncExt(this System.Net.Security.SslStream stream)
         {
             // ThrowIfExceptionalOrNotAuthenticatedOrShutdown();
             // ProtocolToken protocolToken = _context.CreateShutdownToken();
@@ -44,7 +44,12 @@ namespace NetCoreServer
             // return base.InnerStream.WriteAsync(protocolToken.Payload).AsTask();
 
             // https://github.com/dotnet/standard/issues/598
-         
+
+#if HAVE_ShutdownAsync
+            // https://github.com/dotnet/standard/issues/598
+            await stream.ShutdownAsync();
+#else
+
             if (s_shutdownAsync != null)
             {
                 await ((System.Threading.Tasks.Task)(s_shutdownAsync.Invoke(stream, null)));
@@ -52,8 +57,10 @@ namespace NetCoreServer
             else
             {
                 System.Console.WriteLine("!!!! Did not find ShutdownAsync. !!!! ");
-                await System.Threading.Tasks.Task.CompletedTask;
-            } 
+                // await System.Threading.Tasks.Task.CompletedTask;
+            }
+#endif
+
         }
 
 
