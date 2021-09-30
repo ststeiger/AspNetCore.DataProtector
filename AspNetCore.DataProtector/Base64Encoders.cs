@@ -1,7 +1,7 @@
 ﻿/* ===============================================
-* 功能描述：AspNetCore.DataProtection.Base64Encoders
-* 创 建 者：WeiGe
-* 创建日期：9/12/2018 11:49:08 PM
+* Function description: AspNetCore.DataProtection.Base64Encoders
+* Creator: WeiGe
+* Creation date: 9/12/2018 11:49:08 PM
 * ===============================================*/
 
 using System;
@@ -11,6 +11,8 @@ using System.Globalization;
 
 namespace AspNetCore.DataProtector
 {
+
+
     /// <summary>
     /// 
     /// </summary>
@@ -64,10 +66,11 @@ namespace AspNetCore.DataProtector
             }
 
             // Create array large enough for the Base64 characters, not just shorter Base64-URL-encoded form.
-            var buffer = new char[GetArraySizeRequiredToDecode(count)];
+            char[] buffer = new char[GetArraySizeRequiredToDecode(count)];
 
             return Base64Decode(input, offset, buffer, bufferOffset: 0, count: count);
         }
+
 
         /// <summary>
         /// Decodes a base64url-encoded <paramref name="input"/> into a <c>byte[]</c>.
@@ -112,8 +115,8 @@ namespace AspNetCore.DataProtector
 
             // Assumption: input is base64url encoded without padding and contains no whitespace.
 
-            var paddingCharsToAdd = GetNumBase64PaddingCharsToAddForDecode(count);
-            var arraySizeRequired = checked(count + paddingCharsToAdd);
+            int paddingCharsToAdd = GetNumBase64PaddingCharsToAddForDecode(count);
+            int arraySizeRequired = checked(count + paddingCharsToAdd);
             Debug.Assert(arraySizeRequired % 4 == 0, "Invariant: Array length must be a multiple of 4.");
 
             if (buffer.Length - bufferOffset < arraySizeRequired)
@@ -129,10 +132,10 @@ namespace AspNetCore.DataProtector
             }
 
             // Copy input into buffer, fixing up '-' -> '+' and '_' -> '/'.
-            var i = bufferOffset;
-            for (var j = offset; i - bufferOffset < count; i++, j++)
+            int i = bufferOffset;
+            for (int j = offset; i - bufferOffset < count; i++, j++)
             {
-                var ch = input[j];
+                char ch = input[j];
                 if (ch == '-')
                 {
                     buffer[i] = '+';
@@ -177,7 +180,7 @@ namespace AspNetCore.DataProtector
                 return 0;
             }
 
-            var numPaddingCharsToAdd = GetNumBase64PaddingCharsToAddForDecode(count);
+            int numPaddingCharsToAdd = GetNumBase64PaddingCharsToAddForDecode(count);
 
             return checked(count + numPaddingCharsToAdd);
         }
@@ -219,8 +222,8 @@ namespace AspNetCore.DataProtector
                 return string.Empty;
             }
 
-            var buffer = new char[GetArraySizeRequiredToEncode(count)];
-            var numBase64Chars = Base64Encode(input, offset, buffer, outputOffset: 0, count: count);
+            char[] buffer = new char[GetArraySizeRequiredToEncode(count)];
+            int numBase64Chars = Base64Encode(input, offset, buffer, outputOffset: 0, count: count);
 
             return new String(buffer, startIndex: 0, length: numBase64Chars);
         }
@@ -260,7 +263,7 @@ namespace AspNetCore.DataProtector
                 throw new ArgumentOutOfRangeException(nameof(outputOffset));
             }
 
-            var arraySizeRequired = GetArraySizeRequiredToEncode(count);
+            int arraySizeRequired = GetArraySizeRequiredToEncode(count);
             if (output.Length - outputOffset < arraySizeRequired)
             {
                 throw new ArgumentException(
@@ -282,12 +285,12 @@ namespace AspNetCore.DataProtector
             // Use base64url encoding with no padding characters. See RFC 4648, Sec. 5.
 
             // Start with default Base64 encoding.
-            var numBase64Chars = Convert.ToBase64CharArray(input, offset, count, output, outputOffset);
+            int numBase64Chars = Convert.ToBase64CharArray(input, offset, count, output, outputOffset);
 
             // Fix up '+' -> '-' and '/' -> '_'. Drop padding characters.
-            for (var i = outputOffset; i - outputOffset < numBase64Chars; i++)
+            for (int i = outputOffset; i - outputOffset < numBase64Chars; i++)
             {
-                var ch = output[i];
+                char ch = output[i];
                 if (ch == '+')
                 {
                     output[i] = '-';
@@ -316,7 +319,7 @@ namespace AspNetCore.DataProtector
         /// </returns>
         public static int GetArraySizeRequiredToEncode(int count)
         {
-            var numWholeOrPartialInputBlocks = checked(count + 2) / 3;
+            int numWholeOrPartialInputBlocks = checked(count + 2) / 3;
             return checked(numWholeOrPartialInputBlocks * 4);
         }
 

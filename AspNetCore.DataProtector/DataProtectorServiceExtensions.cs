@@ -1,7 +1,7 @@
 ﻿/* ===============================================
-* 功能描述：AspNetCore.DataProtection.DataProtectionServiceExtensions
-* 创 建 者：WeiGe
-* 创建日期：9/13/2018 12:09:18 AM
+* Function description: AspNetCore.DataProtection.DataProtectionServiceExtensions
+* Creator: WeiGe
+* Creation Date: 9/13/2018 12:09:18 AM
 * ===============================================*/
 
 using AspNetCore.DataProtector;
@@ -11,11 +11,15 @@ using System;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
+
+
     /// <summary>
     /// 
     /// </summary>
     public static class DataProtectorServiceExtensions
     {
+
+
         /// <summary>
         /// 
         /// </summary>
@@ -29,5 +33,9 @@ namespace Microsoft.Extensions.DependencyInjection
             services.Configure<DataProtectorOptions>(x => action?.Invoke(x));
             return services;
         }
+
+
     }
+
+
 }

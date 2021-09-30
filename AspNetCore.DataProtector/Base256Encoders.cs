@@ -1,7 +1,7 @@
 ﻿/* ===============================================
-* 功能描述：AspNetCore.DataProtection.Base256Encoders
-* 创 建 者：WeiGe
-* 创建日期：9/12/2018 11:50:14 PM
+* Function description: AspNetCore.DataProtection.Base256Encoders
+* Creator: WeiGe
+* Creation Date: 9/12/2018 11:50:14 PM
 * ===============================================*/
 
 using Microsoft.Extensions.Options;
@@ -15,35 +15,44 @@ using System.Text;
 
 namespace AspNetCore.DataProtector
 {
-    internal  class Base256Encoders
+
+
+    internal class Base256Encoders
     {
         public const int MaxLegnth = 256;
-        static Base256Encoders _Encoder;
-        private IOptions<DataProtectorOptions> _options;
+        protected static Base256Encoders _Encoder;
+        protected IOptions<DataProtectorOptions> _options;
+
+
         private Base256Encoders(IOptions<DataProtectorOptions> options)
         {
             _options = options;
         }
+
+
         internal static void Init(IOptions<DataProtectorOptions> _options)
         {
             _Encoder = new Base256Encoders(_options);
         }
+
+
         public static Base256Encoders Instance
         {
             get { return _Encoder; }
         }
 
-        internal  DataProtectionKeys CurrentKey
+
+        internal DataProtectionKeys CurrentKey
         {
             get
             {
                 if (currentKey == null || currentKey.IsRevoked)
                 {
-                    var keys = GetKeys();
+                    List<DataProtectionKeys> keys = GetKeys();
                     DataProtectionKeys current = keys.FirstOrDefault();
                     if (current == null || current.IsRevoked)
                     {
-                        if (current == null && (this._options.Value.AutoGenerateKeys||keys.Count==0))
+                        if (current == null && (this._options.Value.AutoGenerateKeys || keys.Count == 0))
                         {
                             current = new DataProtectionKeys
                             {
@@ -68,23 +77,25 @@ namespace AspNetCore.DataProtector
                 return currentKey;
             }
         }
+
+
         /// <summary>
         /// 
         /// </summary>
-		 List<DataProtectionKeys> _dataKeys = new List<DataProtectionKeys>();
-        internal  List<DataProtectionKeys> GetKeys()
+        List<DataProtectionKeys> _dataKeys = new List<DataProtectionKeys>();
+        internal List<DataProtectionKeys> GetKeys()
         {
             if (_dataKeys.Count == 0)
             {
-                var files = this._options.Value.KeyDirectory.GetFiles("*.json");
+                FileInfo[] files = this._options.Value.KeyDirectory.GetFiles("*.json");
                 List<DataProtectionKeys> keys = new List<DataProtectionKeys>();
-                foreach (var f in files)
+                foreach (FileInfo f in files)
                 {
-                    using (var stream = f.OpenText())
+                    using (StreamReader stream = f.OpenText())
                     {
                         string str = stream.ReadToEnd();
-                        var key = JsonConvert.DeserializeObject<DataProtectionKeys>(str);
-                        if (key.Id==null||key.Id==Guid.Empty)
+                        DataProtectionKeys key = JsonConvert.DeserializeObject<DataProtectionKeys>(str);
+                        if (key.Id == null || key.Id == Guid.Empty)
                         {
                             stream.Close();
                             continue;
@@ -99,7 +110,9 @@ namespace AspNetCore.DataProtector
             }
             return _dataKeys;
         }
-         DataProtectionKeys currentKey;
+
+
+        protected DataProtectionKeys currentKey;
 
         public static readonly UTF8Encoding SecureUtf8Encoding = new UTF8Encoding(false, true);
         //public const string Base256Code0 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789†‡ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿĀāĂăĄąĆćĈĉĊċČčĎďĐđĒēĔĕĖėĘęĚěĜĝĞğĠġĢģĤĥĦħĨĩĪīĬĭĮįİıĲĳĴĵĶķĸĹĺĻļĽľĿŀŁłŃńŅņŇňŉŊŋŌōŎŏŐőŒœŔŕŖŗŘřŚśŜŝŞşŠšŢţŤťŦŧŨũŪūŬŭŮůŰűŲųŴŵŶŷŸŹźŻżŽžſ";
@@ -111,24 +124,29 @@ namespace AspNetCore.DataProtector
 
         public static string EncryptToBase64(Guid key, string plainInput, byte[] confusionCode)
         {
-            if (string.IsNullOrEmpty(plainInput)||key==null||key==Guid.Empty|| confusionCode.Length!=MaxLegnth)
+            if (string.IsNullOrEmpty(plainInput) || key == null || key == Guid.Empty || confusionCode.Length != MaxLegnth)
             {
                 return string.Empty;
             }
             byte[] plainBytes = SecureUtf8Encoding.GetBytes(plainInput);
-            var encryptBytes = EncryptToBase256(plainBytes, confusionCode);
-            var bytes = key.ToByteArray().Concat(encryptBytes);
+            byte[] encryptBytes = EncryptToBase256(plainBytes, confusionCode);
+            IEnumerable<byte> bytes = key.ToByteArray().Concat(encryptBytes);
             return Base64Encoders.Base64Encode(bytes.ToArray());
         }
+
+
         public static byte[] EncryptToBase64(Guid key, byte[] plainInput, byte[] confusionCode)
         {
-            if (plainInput==null|| plainInput.Length==0 || key == null || key == Guid.Empty || confusionCode.Length != MaxLegnth)
+            if (plainInput == null || plainInput.Length == 0 || key == null || key == Guid.Empty || confusionCode.Length != MaxLegnth)
             {
                 return Array.Empty<byte>();
             }
-            var encryptBytes = EncryptToBase256(plainInput, confusionCode);
+
+            byte[] encryptBytes = EncryptToBase256(plainInput, confusionCode);
             return key.ToByteArray().Concat(encryptBytes).ToArray();
         }
+
+
         public static byte[] EncryptToBase256(string plainInput, byte[] confusionCode)
         {
             if (string.IsNullOrEmpty(plainInput))
@@ -137,35 +155,40 @@ namespace AspNetCore.DataProtector
             }
 
             byte[] plainBytes = SecureUtf8Encoding.GetBytes(plainInput);
-            var encryptBytes = EncryptToBase256(plainBytes, confusionCode);
-            //var encryptString = new string(output, startIndex: 0, length: output.Length);
-            //output = new char[0];
-            //return encryptString;
+            byte[] encryptBytes = EncryptToBase256(plainBytes, confusionCode);
+            // string encryptString = new string(output, startIndex: 0, length: output.Length);
+            // output = new char[0];
+            // return encryptString;
             return encryptBytes;
         }
+
+
         public static byte[] EncryptToBase256(byte[] plainBytes, byte[] confusionCode)
         {
             CheckIsBase256Code(confusionCode);
             if (plainBytes == null || plainBytes.Length == 0)
             {
                 return new byte[0];
-            }           
+            }
             byte[] encryptBytes = new byte[plainBytes.Length];
-            for (var i = 0; i < plainBytes.Length; i++)
+            for (int i = 0; i < plainBytes.Length; i++)
             {
                 encryptBytes[i] = confusionCode[plainBytes[i]];
             }
             return encryptBytes;
         }
+
+
         public static string DecryptFromBase64(byte[] encryptText, byte[] confusionCode)
         {
             try
             {
-                if (encryptText==null|| encryptText.Length==0)
+                if (encryptText == null || encryptText.Length == 0)
                 {
                     return string.Empty;
                 }
-                var decryptBytes = DecryptFromBase256(encryptText, confusionCode);
+
+                byte[] decryptBytes = DecryptFromBase256(encryptText, confusionCode);
                 return SecureUtf8Encoding.GetString(decryptBytes);
             }
             catch
@@ -174,36 +197,41 @@ namespace AspNetCore.DataProtector
                 return string.Empty;
             }
         }
-        /*
-        public static string DecryptFromBase256(string encryptText, byte[] confusionCode)
-        {
-            if (string.IsNullOrEmpty(encryptText))
-            {
-                return string.Empty;
-            }
-            //CheckIsBase256(encryptText);
-            byte[] encryptBytes = new byte[encryptText.Length];// SecureUtf8Encoding.GetBytes(encryptText);
-            for (var i = 0; i < encryptBytes.Length; i++)
-            {
-                var index = Base256Code.IndexOf((char)encryptText[i]);
-                encryptBytes[i] = (byte)index;
-            }
-            byte[] decryptBytes = DecryptFromBase256(encryptBytes, confusionCode);
-            return SecureUtf8Encoding.GetString(decryptBytes);
-        }
-        */
+
+
+        /* 
+         public static string DecryptFromBase256(string encryptText, byte[] confusionCode)
+         {
+             if (string.IsNullOrEmpty(encryptText))
+             {
+                 return string.Empty;
+             }
+             //CheckIsBase256(encryptText);
+             byte[] encryptBytes = new byte[encryptText.Length];// SecureUtf8Encoding.GetBytes(encryptText);
+             for (int i = 0; i < encryptBytes.Length; i++)
+             {
+                 int index = Base256Code.IndexOf((char)encryptText[i]);
+                 encryptBytes[i] = (byte)index;
+             }
+             byte[] decryptBytes = DecryptFromBase256(encryptBytes, confusionCode);
+             return SecureUtf8Encoding.GetString(decryptBytes);
+         }
+         */
+
+
         public static byte[] DecryptFromBase256(byte[] encryptBytes, byte[] confusionCode)
         {
             CheckIsBase256Code(confusionCode);
             if (encryptBytes == null || encryptBytes.Length == 0)
             {
                 return new byte[0];
-            }           
+            }
+
             byte[] decryptBytes = new byte[encryptBytes.Length];
             for (int i = 0; i < encryptBytes.Length; i++)
             {
-                //var chars = Base256Code[encryptBytes[i]];
-                decryptBytes[i] =(byte)Array.IndexOf( confusionCode, encryptBytes[i]);
+                // char[] chars = Base256Code[encryptBytes[i]];
+                decryptBytes[i] = (byte)Array.IndexOf(confusionCode, encryptBytes[i]);
                 if (decryptBytes[i] < 1)
                 {
                     throw new ArgumentOutOfRangeException("Unsupport");
@@ -211,13 +239,15 @@ namespace AspNetCore.DataProtector
             }
             return decryptBytes;
         }
+
+
         /// <summary>
         /// Check whether the the confusion string codes is valid Base256
         /// </summary>
         /// <param name="confusionCode"></param>
         protected static void CheckIsBase256Code(byte[] confusionCode)
         {
-            if (confusionCode==null)
+            if (confusionCode == null)
             {
                 throw new ArgumentNullException(nameof(confusionCode));
             }
@@ -226,29 +256,34 @@ namespace AspNetCore.DataProtector
                 throw new ArgumentException($"Invalid confusion code Length: parameter => confusionCode, length => {confusionCode.Length}");
             }
         }
-         
+
+
         /// <summary>
         /// Create new confusion string codes
         /// </summary>
         /// <returns></returns>
         public static byte[] CreateConfusionCodes()
         {
-            var random = Enumerable.Range(0, MaxLegnth)
+            byte[] random = Enumerable.Range(0, MaxLegnth)
                 .OrderBy(t => Guid.NewGuid())
-                .Select(x=>(byte)x)
+                .Select(x => (byte)x)
                 .ToArray();
             return random;
             /*
-            var values = string.Join(",", random);
-            var codeList = new List<char>(Base256Code.Length);
+            string values = string.Join(",", random);
+            List<char> codeList = new List<char>(Base256Code.Length);
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < Base256Code.Length; i++)
             {
-                var index = random[i];
+                byte index = random[i];
                 sb.Append(Base256Code[index]);
             }
             return sb.ToString();
             */
         }
+
+
     }
+
+
 }

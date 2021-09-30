@@ -80,21 +80,24 @@ namespace AmhMailServer
                     // ABORT HERE!
                     System.Console.WriteLine("Time exceeded. Aborted!");
                 }
+
                 return task.IsCompleted;
             }
             catch (System.AggregateException ae)
             {
                 throw ae.InnerExceptions[0];
             }
+
         } // End Function ExecuteWithTimeLimit 
 
-        static void UnhandledExceptionTrapper(object sender, System.UnhandledExceptionEventArgs e)
-        {
-            System.Console.WriteLine(e.ExceptionObject.ToString());
-            System.Console.WriteLine("Press Enter to continue");
-            System.Console.ReadLine();
-            System.Environment.Exit(1);
-        }
+
+        private static void UnhandledExceptionTrapper(object sender, System.UnhandledExceptionEventArgs e) 
+        { 
+            System.Console.WriteLine(e.ExceptionObject.ToString()); 
+            System.Console.WriteLine("Press Enter to continue"); 
+            System.Console.ReadLine(); 
+            System.Environment.Exit(1); 
+        } // End Sub UnhandledExceptionTrapper 
 
 
         // https://love2dev.com/blog/what-is-the-service-worker-cache-storage-limit/
@@ -107,7 +110,6 @@ namespace AmhMailServer
         {
             // await StartTestServer();
             System.AppDomain.CurrentDomain.UnhandledException += UnhandledExceptionTrapper;
-            
 
 
             System.Threading.Thread thread = new System.Threading.Thread(new System.Threading.ThreadStart(TcpSmtpServer.Test));
@@ -120,7 +122,7 @@ namespace AmhMailServer
             System.Console.WriteLine(System.Environment.NewLine);
             System.Console.WriteLine(" --- Press any key to continue --- ");
             System.Console.ReadKey();
-        }
+        } // End Task Main 
 
 
         public static async System.Threading.Tasks.Task StartTestServer()
@@ -138,7 +140,7 @@ namespace AmhMailServer
             System.Console.ReadKey();
 
             MyClient.StopServer();
-        } // End Task Main 
+        } // End Task StartTestServer 
 
 
     } // End Class Program 
