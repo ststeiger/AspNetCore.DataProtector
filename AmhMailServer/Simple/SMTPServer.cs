@@ -8,10 +8,12 @@ namespace AmhMailServer
 
         protected System.Net.Sockets.TcpClient m_client;
 
-        public void Init(System.Net.Sockets.TcpClient client)
+
+        public SMTPServer(System.Net.Sockets.TcpClient client)
         {
             this.m_client = client;
-        }
+        } // End Constructor 
+
 
         private void Write(string strMessage)
         {
@@ -21,7 +23,8 @@ namespace AmhMailServer
 
             clientStream.Write(buffer, 0, buffer.Length);
             clientStream.Flush();
-        }
+        } // End Sub Write 
+
 
         private string Read()
         {
@@ -32,7 +35,8 @@ namespace AmhMailServer
             bytesRead = clientStream.Read(messageBytes, 0, 8192);
             string strMessage = encoder.GetString(messageBytes, 0, bytesRead);
             return strMessage;
-        }
+        } // End Function Read 
+
 
         public void Run()
         {
@@ -40,7 +44,7 @@ namespace AmhMailServer
             string strMessage = string.Empty;
 
             bool NOSTOP = true;
-
+            /*
             while (NOSTOP)
             {
                 try
@@ -86,17 +90,18 @@ namespace AmhMailServer
                 }
                 else
                 {
-                    NOSTOP = false;
-                    this.m_client.Close();
-                }
-            }
+                    NOSTOP = false; 
+                    this.m_client.Close(); 
+                } 
 
-            System.Console.WriteLine("exiting message loop");
-        }
+            } // Whend 
+            */
 
-
-
-    }
+            System.Console.WriteLine("exiting message loop"); 
+        } // End Sub Run 
 
 
-}
+    } // End Class SMTPServer 
+
+
+} // End Namespace AmhMailServer 

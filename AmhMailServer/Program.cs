@@ -3,7 +3,7 @@ namespace AmhMailServer
 {
 
 
-    class Program
+    public class Program
     {
 
         // https://github.com/cosullivan/SmtpServer
@@ -86,6 +86,14 @@ namespace AmhMailServer
             {
                 throw ae.InnerExceptions[0];
             }
+        } // End Function ExecuteWithTimeLimit 
+
+        static void UnhandledExceptionTrapper(object sender, System.UnhandledExceptionEventArgs e)
+        {
+            System.Console.WriteLine(e.ExceptionObject.ToString());
+            System.Console.WriteLine("Press Enter to continue");
+            System.Console.ReadLine();
+            System.Environment.Exit(1);
         }
 
 
@@ -97,6 +105,26 @@ namespace AmhMailServer
         // https://www.sitepoint.com/offline-web-apps-service-workers-pouchdb/ 
         public static async System.Threading.Tasks.Task Main(string[] args)
         {
+            // await StartTestServer();
+            System.AppDomain.CurrentDomain.UnhandledException += UnhandledExceptionTrapper;
+            
+
+
+            System.Threading.Thread thread = new System.Threading.Thread(new System.Threading.ThreadStart(TcpSmtpServer.Test));
+            thread.Start();
+
+            await System.Threading.Tasks.Task.Delay(100);
+
+            MyClient.Test();
+
+            System.Console.WriteLine(System.Environment.NewLine);
+            System.Console.WriteLine(" --- Press any key to continue --- ");
+            System.Console.ReadKey();
+        }
+
+
+        public static async System.Threading.Tasks.Task StartTestServer()
+        {
             System.Threading.Thread thread = new System.Threading.Thread(new System.Threading.ThreadStart(MyClient.StartServer));
             thread.Start();
 
@@ -106,13 +134,14 @@ namespace AmhMailServer
 
 
             System.Console.WriteLine(System.Environment.NewLine);
-            System.Console.WriteLine(" --- Press any key to continue --- ");
+            System.Console.WriteLine(" --- Press any key to stop server --- ");
             System.Console.ReadKey();
-            MyClient.FOREVER = false;
-        }
+
+            MyClient.StopServer();
+        } // End Task Main 
 
 
-    }
+    } // End Class Program 
 
 
-}
+} // End Namespace AmhMailServer 
