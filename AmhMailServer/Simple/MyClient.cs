@@ -89,10 +89,9 @@ namespace AmhMailServer
         {
             System.Net.Mail.MailMessage msg = new System.Net.Mail.MailMessage();
 
-            string from = ReverseGraphemeClusters("hc.tnemeganam-roc}ta{ksedecivres").Replace("{at}", "@");
-            string to = ReverseGraphemeClusters("hc.tnemeganam-roc]ta[regiets").Replace("[at]", "@");
+            string from = ReverseGraphemeClusters("hc.tnemeganam-roc}ta{ksedecivres".Replace("}ta{", "@"));
+            string to = ReverseGraphemeClusters("hc.tnemeganam-roc]ta[regiets".Replace("]ta[", "@"));
             // System.Console.WriteLine("{0} => {1}", from, to);
-
 
             msg.From = new System.Net.Mail.MailAddress(from);
             msg.To.Add( new System.Net.Mail.MailAddress(to) );

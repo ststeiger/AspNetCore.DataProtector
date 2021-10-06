@@ -127,6 +127,9 @@ namespace AmhMailServer
 
         public static async System.Threading.Tasks.Task StartTestServer()
         {
+            MyClient.Test();
+
+
             System.Threading.Thread thread = new System.Threading.Thread(new System.Threading.ThreadStart(MyClient.StartServer));
             thread.Start();
 
