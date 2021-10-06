@@ -42,7 +42,7 @@ namespace AmhMailServer
         // https://en.wikipedia.org/wiki/List_of_mail_server_software
         // https://en.wikipedia.org/wiki/Comparison_of_mail_servers
         // https://en.wikipedia.org/wiki/JSON_Meta_Application_Protocol
-
+        // https://en.wikipedia.org/wiki/Category:Internet_mail_protocols
 
 
         // SMTP: RFC 2821 
