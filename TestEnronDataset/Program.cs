@@ -7,9 +7,9 @@ namespace TestEnronDataset
     {
 
 
-        static void Main(string[] args)
+        static async System.Threading.Tasks.Task Main(string[] args)
         {
-            EnronDataReader.Test();
+            await EnronDataReader.Test();
 
             System.Console.WriteLine(System.Environment.NewLine);
             System.Console.WriteLine(" --- Press any key to continue --- ");
