@@ -3,13 +3,13 @@ namespace AmhMailServer
 {
 
 
-    public class SmtpTcpSession
+    public class ImapTcpSession
         : NetCoreServer.TcpSession
     {
 
 
 
-        public SmtpTcpSession(NetCoreServer.TcpServer server)
+        public ImapTcpSession(NetCoreServer.TcpServer server)
             : base(server)
         { }
 
@@ -82,37 +82,6 @@ namespace AmhMailServer
                         ColorConsole.LogErrorLineWithLock("[SERVER]: Missed QUIT SIGNAL - Message: \"" + printMessage + "\".");
                     }
 
-                    if (message.StartsWith("QUIT"))
-                    {
-                        this.Disconnect();
-                        ColorConsole.LogLineWithLock("[SERVER]: Quit");
-                    }
-
-                    // message has successfully been received
-                    if (message.StartsWith("EHLO"))
-                    {
-                        Write("250 OK");
-                    }
-
-                    if (message.StartsWith("RCPT TO"))
-                    {
-                        Write("250 OK");
-                    }
-
-                    if (message.StartsWith("MAIL FROM"))
-                    {
-                        Write("250 OK");
-                    }
-
-                    if (message.StartsWith("DATA"))
-                    {
-                        Write("354 Start mail input; end with");
-
-                        // System.Console.WriteLine(message);
-
-                        // message = Read();
-                        Write("250 OK");
-                    }
                 }
 
             }
@@ -143,18 +112,18 @@ namespace AmhMailServer
 
 
     // https://stackoverflow.com/questions/16809214/is-smtp-based-on-tcp-or-udp
-    public class TcpSmtpServer
+    public class TcpImapServer
         : NetCoreServer.TcpServer
     {
 
-        public TcpSmtpServer(System.Net.IPAddress address, int port)
+        public TcpImapServer(System.Net.IPAddress address, int port)
             : base(address, port)
         { }
 
 
         protected override NetCoreServer.TcpSession CreateSession()
         {
-            return new SmtpTcpSession(this);
+            return new ImapTcpSession(this);
         } // End Function CreateSession 
 
 
@@ -167,17 +136,17 @@ namespace AmhMailServer
         public static void Test()
         {
             // TCP server port
-            int port = 25;
-            // Port 25 – this is the default SMTP non-encrypted port;
-            // Port 465 – this is the port used if you want to send messages using SMTP securely.
+            int port = 143;
+            // Port 143 – this is the default IMAP non-encrypted port;
+            // Port 993 – this is the port you need to use if you want to connect using IMAP securely.
 
             System.Console.WriteLine($"TCP server port: {port}");
 
             System.Console.WriteLine();
 
             // Create a new TCP Syslog server
-            TcpSmtpServer server =
-                new TcpSmtpServer(System.Net.IPAddress.Any, port);
+            TcpImapServer server =
+                new TcpImapServer(System.Net.IPAddress.Any, port);
 
             // Start the server
             System.Console.WriteLine("Server starting...");

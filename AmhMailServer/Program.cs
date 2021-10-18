@@ -108,6 +108,29 @@ namespace AmhMailServer
         // https://www.sitepoint.com/offline-web-apps-service-workers-pouchdb/ 
         public static async System.Threading.Tasks.Task Main(string[] args)
         {
+            // await TestSmtpServer();
+            await TestPop3Server();
+        }
+
+
+        public static async System.Threading.Tasks.Task TestPop3Server()
+        {
+            // await StartTestServer();
+            System.AppDomain.CurrentDomain.UnhandledException += UnhandledExceptionTrapper;
+
+
+            System.Threading.Thread thread = new System.Threading.Thread(new System.Threading.ThreadStart(TcpPop3Server.Test));
+            thread.Start();
+
+
+            System.Console.WriteLine(System.Environment.NewLine);
+            System.Console.WriteLine(" --- Press any key to continue --- ");
+            System.Console.ReadKey();
+        } // End Task Main 
+
+
+        public static async System.Threading.Tasks.Task TestSmtpServer()
+        {
             // await StartTestServer();
             System.AppDomain.CurrentDomain.UnhandledException += UnhandledExceptionTrapper;
 
@@ -117,7 +140,7 @@ namespace AmhMailServer
 
             await System.Threading.Tasks.Task.Delay(100);
 
-            MyClient.Test();
+            MySmtpClient.Test();
 
             System.Console.WriteLine(System.Environment.NewLine);
             System.Console.WriteLine(" --- Press any key to continue --- ");
@@ -127,22 +150,22 @@ namespace AmhMailServer
 
         public static async System.Threading.Tasks.Task StartTestServer()
         {
-            MyClient.Test();
+            MySmtpClient.Test();
 
 
-            System.Threading.Thread thread = new System.Threading.Thread(new System.Threading.ThreadStart(MyClient.StartServer));
+            System.Threading.Thread thread = new System.Threading.Thread(new System.Threading.ThreadStart(MySmtpClient.StartServer));
             thread.Start();
 
 
             await System.Threading.Tasks.Task.Delay(100);
-            MyClient.Test();
+            MySmtpClient.Test();
 
 
             System.Console.WriteLine(System.Environment.NewLine);
             System.Console.WriteLine(" --- Press any key to stop server --- ");
             System.Console.ReadKey();
 
-            MyClient.StopServer();
+            MySmtpClient.StopServer();
         } // End Task StartTestServer 
 
 

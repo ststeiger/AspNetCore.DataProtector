@@ -4,7 +4,7 @@ namespace AmhMailServer
 
 
     // https://www.codeproject.com/Tips/286952/create-a-simple-smtp-server-in-csharp
-    public class MyClient
+    public class MySmtpClient
     {
 
 
