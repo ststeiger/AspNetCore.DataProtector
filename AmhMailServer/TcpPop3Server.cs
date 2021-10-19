@@ -2,6 +2,45 @@
 namespace AmhMailServer
 {
 
+    /*
+    VirtualServer.cs
+    AUTH_SASL_ServerMechanism_Plain auth_plain = new AUTH_SASL_ServerMechanism_Plain(false);
+
+    public bool Authenticate(IPAddress ip,string userName,string password)
+    {
+        try
+        {
+            if(m_AuthType == MailServerAuthType_enum.Integrated){}
+            else if(m_AuthType == MailServerAuthType_enum.Windows){}
+            else if(m_AuthType == MailServerAuthType_enum.Ldap){}
+            m_pBadLoginManager.Put(ip.ToString(),userName);
+            m_pApi.UpdateUserLastLoginTime(userName);
+            return validated;
+        }
+        catch(Exception x)
+        {
+            OnError(x);
+            return false;
+        }
+    }
+
+
+    auth_plain.Authenticate += new EventHandler<AUTH_e_Authenticate>(delegate (object s, AUTH_e_Authenticate e1)
+    {
+        try
+        {
+            e1.IsAuthenticated = Authenticate(e.Session.RemoteEndPoint.Address, e1.UserName, e1.Password);
+        }
+        catch (Exception x)
+        {
+            OnError(x);
+            e1.IsAuthenticated = false;
+        }
+    });
+    e.Session.Authentications.Add(auth_plain.Name, auth_plain);
+    
+    */
+
 
     public delegate void foo_t(string args);
 
@@ -334,6 +373,8 @@ namespace AmhMailServer
 
             m_UserName = cmdText;
 
+
+            // this.Write("-ERR Invalid user name.");
 
             this.Write("+OK User name OK.");
         }
@@ -1315,6 +1356,11 @@ namespace AmhMailServer
         public Pop3TcpSession(NetCoreServer.TcpServer server)
             : base(server)
         {
+            System.Collections.Generic.List<string> m_pCapabilities = 
+                new System.Collections.Generic.List<string>();
+            m_pCapabilities.AddRange(new string[] { "IMAP4rev1", "NAMESPACE", "QUOTA", "ACL", "IDLE", "ENABLE", "UTF8=ACCEPT", "SASL-IR" });
+
+
 
             this.commands = new string[] {
                 "STLS",

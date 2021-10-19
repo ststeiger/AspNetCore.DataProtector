@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\AspNetCore.DataProtector\AspNetCore.DataProtector.csproj" />
     <ProjectReference Include="..\NetCoreServer\NetCoreServer.csproj" />
+    <ProjectReference Include="..\S22.Sasl\S22.Sasl.csproj" />
   </ItemGroup>
 
 </Project>

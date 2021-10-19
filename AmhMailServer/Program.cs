@@ -113,9 +113,31 @@ namespace AmhMailServer
         }
 
 
+        public static void SaslTest()
+        {
+            S22.Sasl.SaslMechanism m = S22.Sasl.SaslFactory.Create("Digest-Md5");
+            // Add properties needed by authentication mechanism.
+            m.Properties.Add("Username", "Foo");
+            m.Properties.Add("Password", "Bar");
+
+            while (!m.IsCompleted)
+            {
+                // byte[] serverChallenge = GetDataFromServer(...);
+                // byte[] clientResponse = m.ComputeResponse(serverChallenge);
+
+                // m.GetResponse()
+                
+                // SendMyDataToServer(clientResponse);
+            }
+        }
+
+
         public static async System.Threading.Tasks.Task TestPop3Server()
         {
-            // await StartTestServer();
+            // SaslTest();
+            await StartTestServer();
+
+
             System.AppDomain.CurrentDomain.UnhandledException += UnhandledExceptionTrapper;
 
 
