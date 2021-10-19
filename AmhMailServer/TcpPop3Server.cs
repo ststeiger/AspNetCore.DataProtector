@@ -6,6 +6,26 @@ namespace AmhMailServer
     public delegate void foo_t(string args);
 
 
+    public enum Pop3Command
+    {
+
+        STLS,
+        USER,
+        PASS,
+        AUTH,
+        STAT,
+        LIST,
+        UIDL,
+        TOP,
+        RETR,
+        DELE,
+        NOOP,
+        RSET,
+        CAPA,
+        QUIT
+    }
+
+
     public class InternalMailMessage
     {
         static byte[] buffer = System.IO.File.ReadAllBytes(@"C:\Users\User\Downloads\enron_mail_20150507\maildir\harris-s\inbox\1");
