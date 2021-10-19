@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!--
+    <TargetFramework>netstandard2.0</TargetFramework>
+    https://markheath.net/post/csproj-conditional-references
+    https://web.archive.org/web/20200812155849/https://markheath.net/post/csproj-conditional-references
+    -->
+    <TargetFrameworks>net45;net451;net452;net461;net462;net47;net471;net472;net48;netstandard2.0;net5</TargetFrameworks>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net5' or '$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0" />
+  </ItemGroup>
+  
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' or '$(TargetFramework)' == 'net451' or '$(TargetFramework)' == 'net452' or '$(TargetFramework)' == 'net461' or '$(TargetFramework)' == 'net462' or '$(TargetFramework)' == 'net47' or '$(TargetFramework)' == 'net471' or '$(TargetFramework)' == 'net472' or '$(TargetFramework)' == 'net48'">
+    <Reference Include="System.Configuration" />
+  </ItemGroup>
+  
+</Project>
