@@ -108,6 +108,12 @@ namespace AmhMailServer
         // https://www.sitepoint.com/offline-web-apps-service-workers-pouchdb/ 
         public static async System.Threading.Tasks.Task Main(string[] args)
         {
+
+            // SaslTest();
+            // await StartTestServer();
+
+
+
             // await TestSmtpServer();
             await TestPop3Server();
         }
@@ -134,10 +140,6 @@ namespace AmhMailServer
 
         public static async System.Threading.Tasks.Task TestPop3Server()
         {
-            // SaslTest();
-            await StartTestServer();
-
-
             System.AppDomain.CurrentDomain.UnhandledException += UnhandledExceptionTrapper;
 
 

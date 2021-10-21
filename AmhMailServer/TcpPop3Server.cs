@@ -1473,6 +1473,10 @@ namespace AmhMailServer
                         ColorConsole.LogLine("\".");
                     }
 
+                    System.Console.WriteLine(System.Environment.NewLine);
+                    System.Console.WriteLine("Command: " + cmd);
+                    System.Console.WriteLine("Arguments: " + args);
+                    System.Console.WriteLine(System.Environment.NewLine);
 
 
                     if (commandHandlers.ContainsKey(cmd))
