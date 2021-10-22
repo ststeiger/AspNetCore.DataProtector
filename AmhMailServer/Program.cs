@@ -143,7 +143,8 @@ namespace AmhMailServer
             System.AppDomain.CurrentDomain.UnhandledException += UnhandledExceptionTrapper;
 
 
-            System.Threading.Thread thread = new System.Threading.Thread(new System.Threading.ThreadStart(TcpPop3Server.Test));
+            // System.Threading.Thread thread = new System.Threading.Thread(new System.Threading.ThreadStart(TcpPop3Server.Test));
+            System.Threading.Thread thread = new System.Threading.Thread(new System.Threading.ThreadStart(TlsUpgradablePop3Server.Test));
             thread.Start();
 
 

@@ -1,13 +1,15 @@
 using System;
-using System.ComponentModel;
 using System.Extensions;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
+
 namespace AspNetCore.MailPost.Internal
 {
+
+
 	/// <summary>
 	///
 	/// </summary>
